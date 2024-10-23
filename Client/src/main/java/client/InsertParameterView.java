@@ -1,8 +1,14 @@
 package client;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Properties;
 
 /**
  * Graphical user interface for inserting a new parameter observation. Allows users to select the category
@@ -13,9 +19,10 @@ public class InsertParameterView {
     private JComboBox<String> categoryBox;
     private JComboBox<String> scoreBox;
     private JPanel paramView;
-    private JTextField dateField;
     private JButton addParameterButton;
     private JTextArea notesField;
+    private JPanel datePickerPanel;
+    private final JFrame frame;
 
     /**
      * Constructs the InsertParameterView and sets up event listeners for UI interactions.
@@ -25,12 +32,24 @@ public class InsertParameterView {
      */
     public InsertParameterView(Area area, MonitoringCenter mc){
 
-        JFrame frame = new JFrame("Climate Monitoring");
+        frame = new JFrame("Climate Monitoring");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(550, 200);
         frame.setLocationRelativeTo(null);
         frame.setContentPane(paramView);
-        frame.setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("/Images/icon.png"))).getImage());
+        frame.setIconImage(new ImageIcon("Images/icon.png").getImage());
+
+        //date picker
+        UtilDateModel model = new UtilDateModel();
+        /*
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");*/
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, new Properties());
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        datePicker.setPreferredSize(new Dimension(120,25));
+        datePickerPanel.add(datePicker);
 
         Utils.populateComboBox(categoryBox, Parameter.getCategoryNames());
         Utils.populateComboBox(scoreBox, new String[]{"1", "2", "3", "4", "5"});
@@ -39,7 +58,7 @@ public class InsertParameterView {
         addParameterButton.addActionListener(e -> {
             Parameter.Category category = Parameter.Category.valueOf(categoryBox.getSelectedItem().toString());
             int score = Integer.parseInt((String) scoreBox.getSelectedItem());
-            Date date = Utils.parseDate(dateField.getText());
+            Date date = (Date) datePicker.getModel().getValue();
             String notes = notesField.getText();
             if(date != null){
                 Parameter param = new Parameter(category, score, notes, date, area, mc);
@@ -52,5 +71,9 @@ public class InsertParameterView {
         frame.revalidate();
 
         frame.setVisible(true);
+    }
+
+    public JFrame getFrame(){
+        return frame;
     }
 }
