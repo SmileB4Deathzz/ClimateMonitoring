@@ -1,5 +1,8 @@
-package client;
+package client.views;
 
+import client.*;
+import client.Dialog;
+import client.date_picker.DateLabelFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -7,7 +10,6 @@ import org.jdatepicker.impl.UtilDateModel;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -63,7 +65,7 @@ public class InsertParameterView {
             if(date != null){
                 Parameter param = new Parameter(category, score, notes, date, area, mc);
                 new ParameterManager().addParameter(param);
-                new Dialog(Dialog.type.INFO, "parameter added");
+                new client.Dialog(Dialog.type.INFO, "parameter added");
                 frame.dispose();
             }
         });

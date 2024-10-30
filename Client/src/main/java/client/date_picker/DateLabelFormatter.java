@@ -1,4 +1,4 @@
-package client;
+package client.date_picker;
 
 import javax.swing.*;
 import java.text.ParseException;

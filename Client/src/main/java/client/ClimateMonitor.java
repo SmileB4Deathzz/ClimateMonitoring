@@ -1,5 +1,6 @@
 package client;
 
+import client.views.MainView;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;

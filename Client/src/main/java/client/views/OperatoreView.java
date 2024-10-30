@@ -1,4 +1,7 @@
-package client;
+package client.views;
+
+import client.*;
+import client.Dialog;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -64,7 +67,7 @@ public class OperatoreView {
                 Area selectedArea = Utils.getSelectedArea(table);
                 new InsertParameterView(selectedArea, mc);
             }
-            else new Dialog(Dialog.type.ERR, "Select an area first");
+            else new client.Dialog(Dialog.type.ERR, "Select an area first");
         });
 
         searchButton.addActionListener(e -> {

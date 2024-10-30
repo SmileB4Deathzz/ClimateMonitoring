@@ -1,10 +1,14 @@
-package client;
+package client.views;
+
+import client.Dialog;
+import client.Operator;
+import client.OperatorManager;
+import client.Utils;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Graphical user interface for user login. Allows users to enter their user ID and password for authentication.

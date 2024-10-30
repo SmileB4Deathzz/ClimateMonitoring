@@ -1,4 +1,6 @@
-package client;
+package client.views;
+
+import client.*;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;

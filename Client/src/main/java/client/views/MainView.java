@@ -1,9 +1,10 @@
-package client;
+package client.views;
+
+import client.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Graphical user interface for the main application view. Displays a table of areas and provides
