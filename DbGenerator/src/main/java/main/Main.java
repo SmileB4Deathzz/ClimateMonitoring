@@ -1,11 +1,19 @@
 package main;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 public class Main {
     private static Connection conn = null;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the name of the database");
@@ -19,7 +27,10 @@ public class Main {
 
         connect(dbName, userName, password);
         try {
+            System.out.println("creating tables");
             createTables();
+            System.out.println("Filling Geographical areas table");
+            fillGeographicalAreasTable();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +53,7 @@ public class Main {
         Statement stmt = conn.createStatement();
         stmt.execute("""
                 create table aree_geografiche (
-                \tid integer PRIMARY KEY,
+                \tid SERIAL PRIMARY KEY,
                 \tlatitudine numeric NOT NULL,
                 \tlongitudine numeric NOT NULL,
                 \tdenominazione varchar(30) NOT NULL,
@@ -96,7 +107,27 @@ public class Main {
         stmt.close();
     }
 
-    private static void fillGeographicalAreasTable(){
+    private static void fillGeographicalAreasTable() throws SQLException {
+        Statement stmt = conn.createStatement();
+        String stmtString = "INSERT INTO aree_geografiche (latitudine, longitudine, denominazione, stato) VALUES ";
+        URL filePath = Main.class.getClassLoader().getResource("CoordinateMonitoraggio.dati");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath.getFile()));
+            String line;
+            while ((line = reader.readLine()) != null) {
 
+                String[] values = line.split("\t");
+                String[] coordinates = values[2].trim().split(",");
+
+                stmtString += StringEscapeUtils.escapeJava("(" + coordinates[0] + "," + coordinates[1] +
+                        ", '" + values[0] + "', '" + values[1] + "'), ");
+            }
+            stmtString = stmtString.substring(0, stmtString.length()-2) + ";";
+            System.out.println(stmtString);
+            stmt.execute(stmtString);
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
