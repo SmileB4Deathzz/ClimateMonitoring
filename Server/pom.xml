@@ -32,5 +32,10 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/postgresql-42.7.4.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>Client</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 </project>
