@@ -25,5 +25,12 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/postgresql-42.7.4.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
