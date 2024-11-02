@@ -56,8 +56,8 @@ public class Main {
                 \tid SERIAL PRIMARY KEY,
                 \tlatitudine numeric NOT NULL,
                 \tlongitudine numeric NOT NULL,
-                \tdenominazione varchar(30) NOT NULL,
-                \tstato varchar(30) NOT NULL
+                \tdenominazione varchar(50) NOT NULL,
+                \tstato varchar(50) NOT NULL
                 );
 
                 create table centri_monitoraggio(
@@ -79,10 +79,10 @@ public class Main {
                 );
 
                 create table operatori (
-                \tuserId varchar(20) PRIMARY KEY,
-                \tnome varchar(20) NOT NULL,
-                \tcognome varchar(20) NOT NULL,
-                \tcodice_fiscale varchar(30) NOT NULL,
+                \tuserId varchar(50) PRIMARY KEY,
+                \tnome varchar(50) NOT NULL,
+                \tcognome varchar(50) NOT NULL,
+                \tcodice_fiscale varchar(50) NOT NULL,
                 \temail varchar(255) NOT NULL,
                 \tpassword varchar(255) NOT NULL,
                 \tcentro_monitoraggio integer,
@@ -119,8 +119,12 @@ public class Main {
                 String[] values = line.split("\t");
                 String[] coordinates = values[2].trim().split(",");
 
-                stmtString += StringEscapeUtils.escapeJava("(" + coordinates[0] + "," + coordinates[1] +
-                        ", '" + values[0] + "', '" + values[1] + "'), ");
+                String denominazione = values[0].replace("'", "''");
+                String stato = values[1].replace("'", "''");
+
+
+                stmtString += "(" + coordinates[0] + ", " + coordinates[1] +
+                        ", '" + denominazione + "', '" + stato + "'), ";
             }
             stmtString = stmtString.substring(0, stmtString.length()-2) + ";";
             System.out.println(stmtString);
