@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import org.example.*;
 
 /**
  * Graphical user interface for user registration. Allows users to fill out a registration form with personal information,

@@ -2,6 +2,7 @@ package client;
 
 import java.io.*;
 import java.util.HashMap;
+import org.example.*;
 
 /**
  * A class responsible for managing MonitoringCenter instances and persisting them to a file.

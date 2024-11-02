@@ -3,6 +3,7 @@ package client;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import org.example.*;
 
 /**
  * Manager class for handling Parameter instances. Contains methods for serializing and deserializing

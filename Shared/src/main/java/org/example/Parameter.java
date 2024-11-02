@@ -1,4 +1,4 @@
-package client;
+package org.example;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Date;
 import java.util.Properties;
+import org.example.*;
 
 /**
  * Graphical user interface for inserting a new parameter observation. Allows users to select the category

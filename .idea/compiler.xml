@@ -8,7 +8,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Server" />
         <module name="Client" />
+        <module name="DbGenerator" />
+        <module name="Shared" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CMLib" target="20" />
+    </bytecodeTargetLevel>
   </component>
 </project>

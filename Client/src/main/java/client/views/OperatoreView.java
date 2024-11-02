@@ -8,6 +8,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import org.example.*;
 
 /**
  * Graphical user interface for the operator's view. Displays information about the monitoring center
@@ -99,7 +100,7 @@ public class OperatoreView {
      * @param area The area whose parameters are to be displayed.
      */
     private void displayParameters(Area area){
-        ArrayList<Parameter> params = area.getAreaParameters();
+        ArrayList<Parameter> params = Utils.getAreaParameters(area);
         if (params.size() ==0) {
             paramPanel.removeAll();
             JLabel noParamLabel = new JLabel("No parameters for this area");

@@ -11,6 +11,8 @@
     <modules>
         <module>Server</module>
         <module>Client</module>
+        <module>DbGenerator</module>
+        <module>Shared</module>
     </modules>
 
     <properties>

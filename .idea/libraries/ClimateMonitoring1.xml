@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ClimateMonitoring1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ClimateMonitoring_jar/ClimateMonitoring.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

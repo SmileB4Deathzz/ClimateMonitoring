@@ -5,6 +5,7 @@ import client.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import org.example.*;
 
 public class AddAreasView {
     private final ArrayList<Area> selectedAreas;

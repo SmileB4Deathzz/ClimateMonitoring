@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import org.example.*;
 
 /**
  * Utility class containing various static methods for common tasks such as closing frames,
@@ -137,6 +139,17 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * Retrieves an ArrayList of parameters associated with this area.
+     *
+     * @return An ArrayList of parameters associated with the provided area.
+     */
+    public static ArrayList<Parameter> getAreaParameters(Area a){
+        ArrayList<Parameter> params = new ParameterManager().getParameters();
+        params.removeIf(param -> !(param.getArea().equals(a)));
+        return params;
     }
 
 }
