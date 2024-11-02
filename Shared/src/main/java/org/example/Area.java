@@ -1,4 +1,4 @@
-package client;
+package org.example;
 
 
 import java.io.Serializable;
@@ -128,16 +128,6 @@ public class Area implements Serializable {
         return this.latitudine == crd[0] && this.longitudine == crd[1];
     }
 
-    /**
-     * Retrieves an ArrayList of parameters associated with this area.
-     *
-     * @return An ArrayList of parameters associated with the provided area.
-     */
-    public ArrayList<Parameter> getAreaParameters(){
-        ArrayList<Parameter> params = new ParameterManager().getParameters();
-        params.removeIf(param -> !(param.getArea().equals(this)));
-        return params;
-    }
 
     @Override
     public String toString() {

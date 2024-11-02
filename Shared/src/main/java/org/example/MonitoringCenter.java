@@ -1,4 +1,4 @@
-package client;
+package org.example;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class MonitoringCenter implements Serializable {
         if (this.areas == null)
             this.areas = areas;
         this.areas.addAll(areas);
-        new MCManager().saveMCenter(this);
+        //new MCManager().saveMCenter(this);
     }
 
     /**

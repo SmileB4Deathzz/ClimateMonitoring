@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import org.example.*;
 
 /**
  * Graphical user interface for the main application view. Displays a table of areas and provides
@@ -76,7 +77,7 @@ public class MainView {
      * @param area The area for which to display aggregated parameters.
      */
     private void displayParameters(Area area){
-        ArrayList<Parameter> params = area.getAreaParameters();
+        ArrayList<Parameter> params = Utils.getAreaParameters(area);
         if (params.size() ==0) {
             clearPanels();
             JLabel noParamLabel = new JLabel("No parameters for this area");
@@ -109,7 +110,7 @@ public class MainView {
      * @param area The area for which to display notes.
      */
     private void displayNotes(Area area){
-        ArrayList<Parameter> params = area.getAreaParameters();
+        ArrayList<Parameter> params = Utils.getAreaParameters(area);
         String[][] notes = new ParameterManager().getNotes(params);
         if (notes == null){
             JLabel noNotesLabel = new JLabel("No notes for this area");

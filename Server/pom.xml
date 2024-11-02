@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>Client</artifactId>
+            <artifactId>Shared</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

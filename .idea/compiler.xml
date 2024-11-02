@@ -9,6 +9,7 @@
         <module name="Server" />
         <module name="Client" />
         <module name="DbGenerator" />
+        <module name="Shared" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

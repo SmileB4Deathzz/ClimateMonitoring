@@ -2,9 +2,11 @@ package client;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.example.*;
 
 /**
  * Represents a collection of geographical areas and provides methods for managing and interacting with them.
@@ -17,7 +19,14 @@ public class AreaList {
      * Initializes an AreaList by populating it with data from the file CoordinateMonitoraggio.dati.
      * The constructor retrieves the list of areas from the designated file.
      */
-    public AreaList() {this.areas = getAreaList();}
+    public AreaList() {
+        try {
+            this.areas = ConnectionManager.getCmServer().getAreas();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(this.areas.size());
+    }
 
     /**
      * Constructs an instance of the AreaList class by converting a provided list of areas into

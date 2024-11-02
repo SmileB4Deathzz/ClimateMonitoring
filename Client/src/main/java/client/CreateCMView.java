@@ -3,6 +3,7 @@ package client;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import org.example.*;
 
 /**
  * Graphical user interface for creating a new monitoring center. Allows an operator to select areas

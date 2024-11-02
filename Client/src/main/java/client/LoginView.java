@@ -5,6 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Objects;
+import org.example.*;
 
 /**
  * Graphical user interface for user login. Allows users to enter their user ID and password for authentication.
