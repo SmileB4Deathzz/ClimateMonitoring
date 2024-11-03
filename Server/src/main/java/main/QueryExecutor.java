@@ -1,7 +1,6 @@
 package main;
 
 import org.example.Area;
-import org.example.MonitoringCenter;
 import org.example.Operator;
 import org.example.Parameter;
 
@@ -101,7 +100,7 @@ public class QueryExecutor {
                 String cf = rs.getString(4);
                 String email = rs.getString(5);
                 String password = rs.getString(6);
-                Operator o = new Operator(nome, cognome, cf, email, userId, password, null);
+                Operator o = new Operator(userId, nome, cognome, cf, email, password, null);
                 operators.put(userId, o);
             }
         } catch (SQLException e) {
@@ -112,7 +111,7 @@ public class QueryExecutor {
 
     public Operator select_operator_by_id(String id){
         Operator operator = null;
-        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM operatori WHERE user = ?")){
+        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM operatori WHERE userid = ?")){
             st.setString(1, id);
             ResultSet rs = st.executeQuery();
             if (rs.next()){
@@ -122,6 +121,7 @@ public class QueryExecutor {
                 String cf = rs.getString(4);
                 String email = rs.getString(5);
                 String password = rs.getString(6);
+                operator = new Operator(userId, nome, cognome, cf, email, password, null);
             }
             rs.close();
         } catch (SQLException e){

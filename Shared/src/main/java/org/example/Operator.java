@@ -33,15 +33,15 @@ public class Operator implements Serializable {
     /**
      * Constructs an Operator instance with personal information, user credentials, and an associated monitoring center.
      *
-     * @param nome The first name of the operator.
-     * @param cognome The last name of the operator.
-     * @param codiceFiscale The unique identifier of the operator.
-     * @param email The email address of the operator.
-     * @param userId The user ID of the operator for authentication.
-     * @param password The password of the operator for authentication.
+     * @param userId           The user ID of the operator for authentication.
+     * @param nome             The first name of the operator.
+     * @param cognome          The last name of the operator.
+     * @param codiceFiscale    The unique identifier of the operator.
+     * @param email            The email address of the operator.
+     * @param password         The password of the operator for authentication.
      * @param monitoringCenter The associated monitoring center of the operator.
      */
-    public Operator(String nome, String cognome, String codiceFiscale, String email, String userId, String password, MonitoringCenter monitoringCenter) {
+    public Operator(String userId, String nome, String cognome, String codiceFiscale, String email, String password, MonitoringCenter monitoringCenter) {
         this.nome = nome;
         this.cognome = cognome;
         this.codiceFiscale = codiceFiscale;

@@ -3,6 +3,7 @@ package client;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Objects;
 import org.example.*;
@@ -65,21 +66,22 @@ public class LoginView {
      * @param pwd Password to be validated.
      */
     private void Login(String uid, String pwd){
-        HashMap<String, Operator> operators = new OperatorManager().getOperators();
-        Operator op = operators.get(uid);
-        if (op != null){
-            if (pwd.equals(op.getPassword())) {
-                Utils.closeAllFrames();
-
-                if (op.getCentroMonitoraggio() == null){
-                    new Dialog(Dialog.type.INFO, "Please create a monitoring center first");
-                    new CreateCMView(op);
-                    return;
-                }
-                new OperatoreView(op);
-            }
-            else new Dialog(Dialog.type.ERR, "Wrong username or password");
+        ServerResponse resp = null;
+        try {
+            resp = ConnectionManager.getCmServer().login(uid, pwd);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
-        else new Dialog(Dialog.type.ERR, "Wrong username or password");
+        if (resp.type == ServerResponse.Type.DATA){
+            Operator op = (Operator) resp.data;
+            if (op.getCentroMonitoraggio() == null){
+                new Dialog(Dialog.type.INFO, "Please create a monitoring center first");
+                new CreateCMView(op);
+                return;
+            }
+            new OperatoreView(op);
+        }
+        else
+            new Dialog(Dialog.type.valueOf(resp.type.toString()), resp.message);
     }
 }

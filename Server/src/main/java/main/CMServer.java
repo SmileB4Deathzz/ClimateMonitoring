@@ -64,4 +64,12 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
                 return new ServerResponse(ServerResponse.Type.ERR, "Failed to register operator");
         }
     }
+
+    public ServerResponse login (String userId, String password){
+        if (qe.check_operator_exists(userId)){
+            Operator op = qe.select_operator_by_id(userId);
+            return new ServerResponse(op);
+        }
+        return new ServerResponse(ServerResponse.Type.ERR, "Incorrect userId or password");
+    }
 }
