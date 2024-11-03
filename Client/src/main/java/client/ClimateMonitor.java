@@ -1,6 +1,5 @@
 package client;
 
-import client.views.MainView;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import org.example.CMServerInterface;
 import org.example.Settings;
@@ -26,11 +25,11 @@ public class ClimateMonitor extends UnicastRemoteObject {
         try {
             new ClimateMonitor().startClient();
         } catch (Exception e) {
+            new Dialog(Dialog.type.ERR, "Failed to connect to server");
             throw new RuntimeException(e);
         }
 
         UIManager.setLookAndFeel(new FlatIntelliJLaf());
-        Utils.checkDataFiles();
 
         new MainView();
     }

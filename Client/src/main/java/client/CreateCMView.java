@@ -1,6 +1,4 @@
-package client.views;
-
-import client.*;
+package client;
 
 import javax.swing.*;
 import java.util.ArrayList;

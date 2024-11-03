@@ -2,6 +2,7 @@ package main;
 
 import org.example.Area;
 import org.example.CMServerInterface;
+import org.example.Parameter;
 import org.example.Settings;
 
 import java.rmi.RemoteException;
@@ -33,12 +34,22 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
         }
     }
 
+    private void startServer() throws RemoteException {
+        Registry registry = LocateRegistry.createRegistry(Settings.PORT);
+        try {
+            registry.bind("ClimateMonitoring", this);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Server ready");
+    }
+
     public ArrayList<Area> getAreas() {
         ArrayList<Area> areas = new ArrayList<>();
-        Connection conn= DBManager.getConnection();
-        try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT denominazione, stato, latitudine, longitudine FROM aree_geografiche;");
+        Connection conn = DBManager.getConnection();
+        try (Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT denominazione, stato, latitudine, longitudine FROM aree_geografiche;")) {
             while (rs.next()) {
                 String denominazione = rs.getString(1);
                 String stato = rs.getString(2);
@@ -53,14 +64,7 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
         return areas;
     }
 
-    private void startServer() throws RemoteException {
-        Registry registry = LocateRegistry.createRegistry(Settings.PORT);
-        try {
-            registry.bind("ClimateMonitoring", this);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Server ready");
+    public ArrayList<Parameter> getAreaParameters(Area area){
+
     }
 }

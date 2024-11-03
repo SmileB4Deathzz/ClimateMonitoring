@@ -1,7 +1,4 @@
-package client.views;
-
-import client.*;
-import client.Dialog;
+package client;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;

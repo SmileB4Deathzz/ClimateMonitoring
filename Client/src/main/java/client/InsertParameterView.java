@@ -1,4 +1,4 @@
-package client.views;
+package client;
 
 import client.*;
 import client.Dialog;
