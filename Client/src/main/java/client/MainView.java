@@ -101,16 +101,15 @@ public class MainView {
         paramsPanel.add(scrollPane);
         paramsPanel.revalidate();
 
-        displayNotes(area);
+        displayNotes(params);
     }
 
     /**
-     * Displays notes left by operators for the specified area and populates the notes panel.
+     * Displays notes left by operators
      *
-     * @param area The area for which to display notes.
+     * @param params The parameters which contain notes.
      */
-    private void displayNotes(Area area){
-        ArrayList<Parameter> params = Utils.getAreaParameters(area);
+    private void displayNotes(ArrayList<Parameter> params){
         String[][] notes = new ParameterManager().getNotes(params);
         if (notes == null){
             JLabel noNotesLabel = new JLabel("No notes for this area");

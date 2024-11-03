@@ -21,12 +21,12 @@ import org.postgresql.*;
  *
  */
 public class CMServer extends UnicastRemoteObject implements CMServerInterface {
+    private QueryExecutor qe = null;
 
     public CMServer() throws RemoteException {
     }
 
     public static void main(String[] args ) throws SQLException {
-        Connection conn = new DBManager().connect("dbCM", "postgres", "buzica");
         try {
             new CMServer().startServer();
         } catch (RemoteException e) {
@@ -35,6 +35,7 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
     }
 
     private void startServer() throws RemoteException {
+        qe = new QueryExecutor("dbCM", "postgres", "buzica");
         Registry registry = LocateRegistry.createRegistry(Settings.PORT);
         try {
             registry.bind("ClimateMonitoring", this);
@@ -46,25 +47,10 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
     }
 
     public ArrayList<Area> getAreas() {
-        ArrayList<Area> areas = new ArrayList<>();
-        Connection conn = DBManager.getConnection();
-        try (Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT denominazione, stato, latitudine, longitudine FROM aree_geografiche;")) {
-            while (rs.next()) {
-                String denominazione = rs.getString(1);
-                String stato = rs.getString(2);
-                double latitudine = Double.parseDouble(rs.getString(3));
-                double longitudine = Double.parseDouble(rs.getString(4));
-                Area a = new Area(denominazione, stato, latitudine, longitudine);
-                areas.add(a);
-            }
-        } catch (SQLException e) {
-            System.err.println("Failed to get areas from the database");
-        }
-        return areas;
+        return qe.select_all_geographic_areas();
     }
 
     public ArrayList<Parameter> getAreaParameters(Area area){
-
+        return qe.select_area_parameters(area);
     }
 }

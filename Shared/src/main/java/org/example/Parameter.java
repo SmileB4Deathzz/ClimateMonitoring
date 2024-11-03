@@ -36,7 +36,7 @@ public class Parameter implements Serializable {
     private final Area area;
 
     /** The monitoring center associated with the parameter observation. */
-    private final MonitoringCenter mc;
+    private MonitoringCenter mc;
 
     /**
      * Constructs a Parameter instance with the provided category, score, notes, date, area, and monitoring center.
@@ -55,6 +55,14 @@ public class Parameter implements Serializable {
         this.date = date;
         this.area = area;
         this.mc = mc;
+    }
+
+    public Parameter(Category category, int score, String notes, Date date, Area area){
+        this.category = category;
+        this.score = score;
+        this.notes = notes;
+        this.date = date;
+        this.area = area;
     }
 
     //Getters

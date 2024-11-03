@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -147,9 +148,12 @@ public class Utils {
      * @return An ArrayList of parameters associated with the provided area.
      */
     public static ArrayList<Parameter> getAreaParameters(Area a){
-        ArrayList<Parameter> params = new ParameterManager().getParameters();
-        params.removeIf(param -> !(param.getArea().equals(a)));
-        return params;
+        try {
+            return ConnectionManager.getCmServer().getAreaParameters(a);
+        } catch (RemoteException e) {
+            new Dialog(Dialog.type.ERR, "Failed to get area parameters");
+            throw new RuntimeException(e);
+        }
     }
 
 }
