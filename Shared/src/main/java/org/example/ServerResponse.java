@@ -1,13 +1,18 @@
 package org.example;
 
-public class ServerResponse {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class ServerResponse implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     public enum Type{
-        ERR, OK;
+        ERR, INFO;
     }
     public Type type;
     public String message;
 
-    ServerResponse(Type type, String msg){
+    public ServerResponse(Type type, String msg){
         this.type = type;
         this.message = msg;
     }

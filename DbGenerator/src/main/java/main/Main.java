@@ -61,19 +61,18 @@ public class Main {
                 );
 
                 create table centri_monitoraggio(
-                \tid integer PRIMARY KEY,
-                \tnome varchar(50),
+                \tnome varchar(50) PRIMARY KEY,
                 \tindirizzo varchar(50)
                 );
 
                 create table aree_interesse(
                 \tarea integer NOT NULL,
-                \tcentro_monitoraggio integer NOT NULL,
+                \tcentro_monitoraggio varchar(50) NOT NULL,
                 \tPRIMARY KEY (area, centro_monitoraggio),
                 \tFOREIGN KEY (area) references aree_geografiche(id)
                 \t\tON DELETE CASCADE
                 \t\tON UPDATE CASCADE,
-                \tFOREIGN KEY (centro_monitoraggio) references centri_monitoraggio(id)
+                \tFOREIGN KEY (centro_monitoraggio) references centri_monitoraggio(nome)
                 \t\tON DELETE CASCADE
                 \t\tON UPDATE CASCADE
                 );
@@ -85,8 +84,8 @@ public class Main {
                 \tcodice_fiscale varchar(50) NOT NULL,
                 \temail varchar(255) NOT NULL,
                 \tpassword varchar(255) NOT NULL,
-                \tcentro_monitoraggio integer,
-                \tFOREIGN KEY (centro_monitoraggio) references centri_monitoraggio(id)
+                \tcentro_monitoraggio varchar(50),
+                \tFOREIGN KEY (centro_monitoraggio) references centri_monitoraggio(nome)
                 \t\tON DELETE SET NULL
                 \t\tON UPDATE CASCADE
                 );
@@ -97,10 +96,10 @@ public class Main {
                 \tcommenti varchar(1000),
                 \tdata date,
                 \tarea integer,
-                \tcentro_monitoraggio integer,
+                \tcentro_monitoraggio varchar(50),
                 \tforeign key (area) references aree_geografiche(id)
                 \t\tON UPDATE CASCADE,
-                \tforeign key (centro_monitoraggio) references centri_monitoraggio (id)
+                \tforeign key (centro_monitoraggio) references centri_monitoraggio (nome)
                 \t\tON DELETE SET NULL
                 \t\tON UPDATE CASCADE
                 );""");

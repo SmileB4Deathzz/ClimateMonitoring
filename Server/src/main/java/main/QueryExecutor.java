@@ -8,6 +8,7 @@ import org.example.Parameter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class QueryExecutor {
@@ -85,21 +86,89 @@ public class QueryExecutor {
         return params;
     }
 
-    public ArrayList<Operator> select_all_operators(){
-        ArrayList<Operator> operators = new ArrayList<>();
+    /**
+     * Select all operators information, except their monitoring center
+     * @return
+     */
+    public HashMap<String, Operator> select_all_operators(){
+        HashMap<String, Operator> operators = new HashMap<>();
         try (Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery("SELECT denominazione, stato, latitudine, longitudine FROM aree_geografiche;")) {
+             ResultSet rs = st.executeQuery("SELECT userId, nome, cognome, codice_fiscale, email, password FROM operatori;")) {
             while (rs.next()) {
-                String denominazione = rs.getString(1);
-                String stato = rs.getString(2);
-                double latitudine = Double.parseDouble(rs.getString(3));
-                double longitudine = Double.parseDouble(rs.getString(4));
-                Area a = new Area(denominazione, stato, latitudine, longitudine);
-                operators.add(a);
+                String userId = rs.getString(1);
+                String nome = rs.getString(2);
+                String cognome = rs.getString(3);
+                String cf = rs.getString(4);
+                String email = rs.getString(5);
+                String password = rs.getString(6);
+                Operator o = new Operator(nome, cognome, cf, email, userId, password, null);
+                operators.put(userId, o);
             }
         } catch (SQLException e) {
             System.err.println("Failed to get areas from the database");
         }
         return operators;
+    }
+
+    public Operator select_operator_by_id(String id){
+        Operator operator = null;
+        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM operatori WHERE user = ?")){
+            st.setString(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()){
+                String userId = rs.getString(1);
+                String nome = rs.getString(2);
+                String cognome = rs.getString(3);
+                String cf = rs.getString(4);
+                String email = rs.getString(5);
+                String password = rs.getString(6);
+            }
+            rs.close();
+        } catch (SQLException e){
+            System.err.println("Failed excute querry");
+        }
+        return operator;
+    }
+
+    public boolean check_operator_exists(String id){
+        boolean result = false;
+        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM operatori WHERE userid = ?")) {
+            st.setString(1, id);
+            ResultSet rs = st.executeQuery();
+            result = rs.next();
+        } catch (SQLException e){
+            System.err.println("Failed to execute query");
+        }
+        return result;
+    }
+
+    public boolean check_mc_exists(String mcName){
+        boolean result = false;
+        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM centri_monitoraggio WHERE nome = ?")) {
+            st.setString(1, mcName);
+            ResultSet rs = st.executeQuery();
+            result = rs.next();
+        } catch (SQLException e){
+            System.err.println("Failed to execute query");
+        }
+        return result;
+    }
+
+    public boolean insert_operator(String userId, String nome, String cognome, String cf, String email, String password, String mc) {
+        boolean inserted = true;
+        try (PreparedStatement st = conn.prepareStatement("INSERT INTO operatori VALUES (?, ?, ?, ?, ?, ?, ?)")){
+            st.setString(1, userId);
+            st.setString(2, nome);
+            st.setString(3, cognome);
+            st.setString(4, cf);
+            st.setString(5, email);
+            st.setString(6, password);
+            st.setString(7, mc.isEmpty() ? null : mc);
+            st.executeUpdate();
+        } catch (SQLException e){
+            inserted = false;
+            System.err.println("Failed to register user");
+        }
+        return inserted;
     }
 }

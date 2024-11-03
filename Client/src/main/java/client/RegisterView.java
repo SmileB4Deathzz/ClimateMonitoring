@@ -5,6 +5,7 @@ import client.*;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -52,11 +53,14 @@ public class RegisterView {
 
         registerButton.addActionListener(e -> {
             if (inputIsValid()) {
-                MonitoringCenter mc = new MCManager().getMonitoringCenter(mCField.getText());
-                Operator operator = new Operator(nomeField.getText(), cognomeField.getText(), cFField.getText(), mailField.getText(), uIDField.getText(), String.valueOf(passwordField.getPassword()), mc);
-                OperatorManager om = new OperatorManager();
-                if (om.saveOperator(operator)) {
-                    new Dialog(Dialog.type.INFO, "You have successfully registered, please log in");
+                ServerResponse resp = null;
+                try {
+                    resp = ConnectionManager.getCmServer().register(uIDField.getText(), nomeField.getText(), cognomeField.getText(), cFField.getText(), mailField.getText(), String.valueOf(passwordField.getPassword()), mCField.getText());
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+                new Dialog(Dialog.type.valueOf(resp.type.toString()), resp.message);
+                if (resp.type != ServerResponse.Type.ERR){
                     clearInput();
                     frame.setVisible(false);
                 }
@@ -117,11 +121,6 @@ public class RegisterView {
         }
         else if (uIDField.getText().isEmpty()){
             new Dialog(Dialog.type.ERR, "User Id field shouldn't be empty");
-            return false;
-        }
-        HashMap<String, Operator> operators = new OperatorManager().getOperators();
-        if (operators.get(uIDField.getText()) != null){
-            new Dialog(Dialog.type.ERR, "This User Id already exists");
             return false;
         }
         else if (String.valueOf(passwordField.getPassword()).isEmpty()){
