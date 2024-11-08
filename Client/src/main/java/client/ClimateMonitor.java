@@ -29,6 +29,7 @@ public class ClimateMonitor extends UnicastRemoteObject {
             throw new RuntimeException(e);
         }
 
+        AreaRegistry.loadAreas();
         UIManager.setLookAndFeel(new FlatIntelliJLaf());
 
         new MainView();

@@ -72,4 +72,19 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
         }
         return new ServerResponse(ServerResponse.Type.ERR, "Incorrect userId or password");
     }
+
+    public ServerResponse createMc(String mcName, String address, ArrayList<Area> areas){
+        if (qe.check_mc_exists(mcName))
+            return new ServerResponse(ServerResponse.Type.ERR, "Monitoring center with this name already exists");
+
+        if (qe.insert_mc(mcName, address)) {
+            for (Area a : areas){
+                qe.insert_area_interesse(a.getId(), mcName);
+            }
+            return new ServerResponse(new MonitoringCenter(mcName, address, areas));
+        }
+        return new ServerResponse(ServerResponse.Type.ERR, "Failed to create monitoring center");
+    }
+
+    public ServerResponse
 }

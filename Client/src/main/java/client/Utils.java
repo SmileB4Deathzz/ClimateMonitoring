@@ -71,7 +71,7 @@ public class Utils {
         String stato = table.getValueAt(selectedRow, 1).toString();
         String latitudine = table.getValueAt(selectedRow, 2).toString();
         String longitudine = table.getValueAt(selectedRow, 3).toString();
-        return new Area(denominazione, stato, Double.parseDouble(latitudine), Double.parseDouble(longitudine));
+        return AreaRegistry.getArea(denominazione, stato, Double.parseDouble(latitudine), Double.parseDouble(longitudine));
     }
 
     /**

@@ -1,6 +1,7 @@
 package main;
 
 import org.example.Area;
+import org.example.MonitoringCenter;
 import org.example.Operator;
 import org.example.Parameter;
 
@@ -35,13 +36,14 @@ public class QueryExecutor {
     public ArrayList<Area> select_all_geographic_areas() {
         ArrayList<Area> areas = new ArrayList<>();
         try (Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery("SELECT denominazione, stato, latitudine, longitudine FROM aree_geografiche;")) {
+             ResultSet rs = st.executeQuery("SELECT denominazione, stato, latitudine, longitudine, id FROM aree_geografiche;")) {
             while (rs.next()) {
                 String denominazione = rs.getString(1);
                 String stato = rs.getString(2);
                 double latitudine = Double.parseDouble(rs.getString(3));
                 double longitudine = Double.parseDouble(rs.getString(4));
-                Area a = new Area(denominazione, stato, latitudine, longitudine);
+                int id = rs.getInt(5);
+                Area a = new Area(denominazione, stato, latitudine, longitudine, id);
                 areas.add(a);
             }
         } catch (SQLException e) {
@@ -130,6 +132,48 @@ public class QueryExecutor {
         return operator;
     }
 
+    public MonitoringCenter select_mc_by_name(String mcName){
+        MonitoringCenter mc = null;
+        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM centri_monitoraggio WHERE nome = ?")){
+            st.setString(1, mcName);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()){
+                String name = rs.getString(1);
+                String address = rs.getString(2);
+                mc = new MonitoringCenter(name, address, null);
+            }
+            rs.close();
+        } catch (SQLException e){
+            System.err.println("Failed to excute querry");
+            e.printStackTrace();
+        }
+        return mc;
+    }
+
+    public ArrayList<Area> select_aree_interesse_by_mc(String mcName){
+        ArrayList<Area> areas = new ArrayList<>();
+        try (PreparedStatement st = conn.prepareStatement("SELECT (denominazione, stato, latitudine, longitudine)" +
+                "\tFROM aree_geografiche" +
+                "\tWHERE id IN" +
+                "(SELECT id FROM aree_interesse WHERE centro_monitoraggio = ?)")){
+            st.setString(1, mcName);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()){
+                String denominazione = rs.getString(1);
+                String stato = rs.getString(2);
+                double latitudine = rs.getDouble(3);
+                double longitudine = rs. getDouble(4);
+
+                Area a = new Area(denominazione, stato, latitudine, longitudine);
+                areas.add(a);
+            }
+        } catch (SQLException e){
+            System.err.println("Failed to excute querry");
+            e.printStackTrace();
+        }
+        return areas;
+    }
+
     public boolean check_operator_exists(String id){
         boolean result = false;
         try (PreparedStatement st = conn.prepareStatement("SELECT * FROM operatori WHERE userid = ?")) {
@@ -168,6 +212,33 @@ public class QueryExecutor {
         } catch (SQLException e){
             inserted = false;
             System.err.println("Failed to register user");
+            e.printStackTrace();
+        }
+        return inserted;
+    }
+
+    public boolean insert_area_interesse(int idArea, String mcName){
+        boolean inserted = true;
+        try (PreparedStatement st = conn.prepareStatement("INSERT INTO aree_interesse VALUES(?, ?)")){
+            st.setInt(1, idArea);
+            st.setString(2, mcName);
+        }   catch (SQLException e){
+            inserted = false;
+            System.err.println("Failed to insert area interesse");
+            e.printStackTrace();
+        }
+        return inserted;
+    }
+
+    public boolean insert_mc(String mcName, String address){
+        boolean inserted = true;
+        try (PreparedStatement st = conn.prepareStatement("INSERT INTO centri_monitoraggio VALUES (?, ?)")){
+            st.setString(1, mcName);
+            st.setString(2, address);
+        }   catch (SQLException e){
+            inserted = false;
+            System.err.println("Failed to insert new monitoring center");
+            e.printStackTrace();
         }
         return inserted;
     }

@@ -21,15 +21,25 @@ public class Area implements Serializable {
 
     /** The state or country information of the area. */
     private String stato;
+    private int id;
 
     /**
      * Class constructor
      */
+    public Area(String denominazione, String stato, double latitudine, double longitudine, int id) {
+        this.latitudine = latitudine;
+        this.longitudine = longitudine;
+        this.denominazione = denominazione;
+        this.stato = stato;
+        this.id = id;
+    }
+
     public Area(String denominazione, String stato, double latitudine, double longitudine) {
         this.latitudine = latitudine;
         this.longitudine = longitudine;
         this.denominazione = denominazione;
         this.stato = stato;
+        this.id = id;
     }
 
     /**
@@ -40,6 +50,7 @@ public class Area implements Serializable {
         this.longitudine = 0;
         this.denominazione = null;
         this.stato = null;
+        this.id = 0;
     }
 
     // metodi getter
@@ -74,6 +85,10 @@ public class Area implements Serializable {
 
     public void setStato(String stato) {
         this.stato = stato;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**

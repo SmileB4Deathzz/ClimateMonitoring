@@ -1,6 +1,7 @@
 package client;
 
 import javax.swing.*;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Objects;
 import org.example.*;
@@ -78,14 +79,22 @@ public class CreateCMView {
                 String name = nameField.getText();
                 String address = addressField.getText();
 
-                MonitoringCenter mc = new MonitoringCenter(name, address, selectedAreas);
-                if (new MCManager().addMCenter(mc)) {
+                ServerResponse sResp = null;
+                try {
+                    sResp = ConnectionManager.getCmServer().createMc(name, address, selectedAreas);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                if (sResp.type == ServerResponse.Type.DATA){
+                    MonitoringCenter mc = (MonitoringCenter) sResp.data;
                     operator.setCentroMonitoraggio(mc);
-                    new OperatorManager().saveOperator(operator);
                     new Dialog(Dialog.type.INFO, "Monitoring Center created successfully");
                     frame.dispose();
                     new OperatoreView(operator);
                 }
+                else
+                    new Dialog(Dialog.type.valueOf(sResp.type.toString()), sResp.message);
             }
         });
     }

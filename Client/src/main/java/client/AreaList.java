@@ -20,12 +20,7 @@ public class AreaList {
      * The constructor retrieves the list of areas from the designated file.
      */
     public AreaList() {
-        try {
-            this.areas = ConnectionManager.getCmServer().getAreas();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(this.areas.size());
+        this.areas = AreaRegistry.getAreas();
     }
 
     /**
@@ -34,7 +29,7 @@ public class AreaList {
      *
      * @param al The list of areas to be included in the AreaList.
      */
-    public AreaList(List<Area> al){
+    public AreaList(ArrayList<Area> al){
         this.areas = al;
     }
 
@@ -43,8 +38,8 @@ public class AreaList {
      *
      * @return A list of areas containing the deserialized data.
      */
-    public List<Area> getAreaList() {
-        List<Area> areas = new ArrayList<>();
+    public ArrayList<Area> getAreaList() {
+        ArrayList<Area> areas = new ArrayList<>();
 
         String filePath = "../data/CoordinateMonitoraggio.dati";
         try {
@@ -75,8 +70,8 @@ public class AreaList {
      * @param str The search string containing either text or coordinates (latitude, longitude) to search for.
      * @return A list of areas matching the provided search string.
      */
-    public List<Area> search(String str) {
-        List<Area> result = new ArrayList<>(this.areas);
+    public ArrayList<Area> search(String str) {
+        ArrayList<Area> result = new ArrayList<>(this.areas);
 
         if (str.contains(",")){
             String[] stringCrds = str.split(",");
