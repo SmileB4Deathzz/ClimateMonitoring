@@ -2,6 +2,7 @@ package client;
 
 import java.io.*;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.example.*;
 
@@ -115,6 +116,15 @@ public class MCManager {
             throw new RuntimeException(e);
         }
         return (MonitoringCenter) sResp.data;
+    }
+
+    public void addAreas(MonitoringCenter mc, ArrayList<Area> areas){
+        ServerResponse sResp = null;
+        try {
+            sResp = ConnectionManager.getCmServer().addAreasToMc(mc.getNome(), areas);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

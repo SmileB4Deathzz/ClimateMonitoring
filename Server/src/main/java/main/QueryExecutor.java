@@ -265,6 +265,20 @@ public class QueryExecutor {
         return inserted;
     }
 
+    public void insert_areas_to_mc(String mcName, ArrayList<Area> areas){
+        try (PreparedStatement st = conn.prepareStatement("INSERT INTO aree_interesse VALUES (?, ?)")){
+            for (Area area : areas){
+                st.setInt(1, area.getId());
+                st.setString(2, mcName);
+                st.addBatch();
+            }
+            st.executeBatch();
+        } catch (SQLException e) {
+            System.err.println("Failed to insert areas");
+            e.printStackTrace();
+        }
+    }
+
     public void update_operator_mc(String userId, String mcName){
         try (PreparedStatement st = conn.prepareStatement("UPDATE operatori SET centro_monitoraggio = ? WHERE userid = ?")){
             st.setString(1, mcName);

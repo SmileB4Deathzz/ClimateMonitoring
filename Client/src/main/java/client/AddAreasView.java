@@ -19,7 +19,7 @@ public class AddAreasView {
 
 
     public AddAreasView(Operator operator) {
-        MonitoringCenter mc = operator.getCentroMonitoraggio();
+        MonitoringCenter mc = new MCManager().getMonitoringCenter(operator.getCentroMonitoraggio().getNome());
         selectedAreas = new ArrayList<>();
         AreaList areas = new AreaList();
         frame = new JFrame("Climate Monitoring");
@@ -65,8 +65,7 @@ public class AddAreasView {
         });
 
         confirmButton.addActionListener(e -> {
-                mc.addAreas(selectedAreas);
-                new MCManager().saveMCenter(mc);
+                new MCManager().addAreas(mc, selectedAreas);
                 new Dialog(Dialog.type.INFO, "Areas added successfully");
                 frame.dispose();
                 new OperatoreView(operator);

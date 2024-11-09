@@ -76,12 +76,12 @@ public class LoginView {
             Operator op = (Operator) resp.data;
             if (op.getCentroMonitoraggio() == null){
                 new Dialog(Dialog.type.INFO, "Please create a monitoring center first");
+                Utils.closeAllFrames();
                 new CreateCMView(op);
-                frame.dispose();
                 return;
             }
+            Utils.closeAllFrames();
             new OperatoreView(op);
-            frame.dispose();
         }
         else
             new Dialog(Dialog.type.valueOf(resp.type.toString()), resp.message);

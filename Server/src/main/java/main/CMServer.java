@@ -8,7 +8,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Hello world!
@@ -91,5 +90,10 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
         MonitoringCenter mc = qe.select_mc_by_name(mcName);
         mc.addAreas(qe.select_aree_interesse_by_mc(mcName));
         return new ServerResponse(mc);
+    }
+
+    public ServerResponse addAreasToMc(String mcName, ArrayList<Area> areas){
+        qe.insert_areas_to_mc(mcName, areas);
+        return new ServerResponse(ServerResponse.Type.INFO, "Areas added successfuly");
     }
 }
