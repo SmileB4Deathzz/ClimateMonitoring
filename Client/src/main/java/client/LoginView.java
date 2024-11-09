@@ -77,9 +77,11 @@ public class LoginView {
             if (op.getCentroMonitoraggio() == null){
                 new Dialog(Dialog.type.INFO, "Please create a monitoring center first");
                 new CreateCMView(op);
+                frame.dispose();
                 return;
             }
             new OperatoreView(op);
+            frame.dispose();
         }
         else
             new Dialog(Dialog.type.valueOf(resp.type.toString()), resp.message);

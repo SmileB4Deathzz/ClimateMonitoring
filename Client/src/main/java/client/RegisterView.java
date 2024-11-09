@@ -127,13 +127,6 @@ public class RegisterView {
             new Dialog(Dialog.type.ERR, "Password shouldn't be empty");
             return false;
         }
-        else if (!mCField.getText().isEmpty()){
-            MonitoringCenter mc = new MCManager().getMonitoringCenter(mCField.getText());
-            if (mc == null){
-                new Dialog(Dialog.type.ERR, "No monitoring center with that name exists");
-                return false;
-            }
-        }
         return true;
     }
 }

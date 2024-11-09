@@ -53,7 +53,8 @@ public class MonitoringCenter implements Serializable {
     public void addAreas(ArrayList<Area> areas) {
         if (this.areas == null)
             this.areas = areas;
-        this.areas.addAll(areas);
+        else
+            this.areas.addAll(areas);
         //new MCManager().saveMCenter(this);
     }
 

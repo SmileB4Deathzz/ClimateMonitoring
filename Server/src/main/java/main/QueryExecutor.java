@@ -123,7 +123,14 @@ public class QueryExecutor {
                 String cf = rs.getString(4);
                 String email = rs.getString(5);
                 String password = rs.getString(6);
-                operator = new Operator(userId, nome, cognome, cf, email, password, null);
+                String mcName = rs.getString(7);
+
+                MonitoringCenter mc = null;
+                if (mcName != null) {
+                    mc = this.select_mc_by_name(mcName);
+                    mc.addAreas(this.select_aree_interesse_by_mc(mcName));
+                }
+                operator = new Operator(userId, nome, cognome, cf, email, password, mc);
             }
             rs.close();
         } catch (SQLException e){
@@ -152,10 +159,10 @@ public class QueryExecutor {
 
     public ArrayList<Area> select_aree_interesse_by_mc(String mcName){
         ArrayList<Area> areas = new ArrayList<>();
-        try (PreparedStatement st = conn.prepareStatement("SELECT (denominazione, stato, latitudine, longitudine)" +
+        try (PreparedStatement st = conn.prepareStatement("SELECT denominazione, stato, latitudine, longitudine" +
                 "\tFROM aree_geografiche" +
                 "\tWHERE id IN" +
-                "(SELECT id FROM aree_interesse WHERE centro_monitoraggio = ?)")){
+                "(SELECT area FROM aree_interesse WHERE centro_monitoraggio = ?)")){
             st.setString(1, mcName);
             ResultSet rs = st.executeQuery();
             while (rs.next()){
@@ -198,6 +205,19 @@ public class QueryExecutor {
         return result;
     }
 
+    public boolean check_operator_login(String userId, String password){
+        boolean result = false;
+        try (PreparedStatement st = conn.prepareStatement("SELECT * FROM operatori WHERE userid = ? AND password = ?")) {
+            st.setString(1, userId);
+            st.setString(2, password);
+            ResultSet rs = st.executeQuery();
+            result = rs.next();
+        } catch (SQLException e){
+            System.err.println("Failed to execute query");
+        }
+        return result;
+    }
+
     public boolean insert_operator(String userId, String nome, String cognome, String cf, String email, String password, String mc) {
         boolean inserted = true;
         try (PreparedStatement st = conn.prepareStatement("INSERT INTO operatori VALUES (?, ?, ?, ?, ?, ?, ?)")){
@@ -222,6 +242,7 @@ public class QueryExecutor {
         try (PreparedStatement st = conn.prepareStatement("INSERT INTO aree_interesse VALUES(?, ?)")){
             st.setInt(1, idArea);
             st.setString(2, mcName);
+            st.executeUpdate();
         }   catch (SQLException e){
             inserted = false;
             System.err.println("Failed to insert area interesse");
@@ -235,11 +256,23 @@ public class QueryExecutor {
         try (PreparedStatement st = conn.prepareStatement("INSERT INTO centri_monitoraggio VALUES (?, ?)")){
             st.setString(1, mcName);
             st.setString(2, address);
+            st.executeUpdate();
         }   catch (SQLException e){
             inserted = false;
             System.err.println("Failed to insert new monitoring center");
             e.printStackTrace();
         }
         return inserted;
+    }
+
+    public void update_operator_mc(String userId, String mcName){
+        try (PreparedStatement st = conn.prepareStatement("UPDATE operatori SET centro_monitoraggio = ? WHERE userid = ?")){
+            st.setString(1, mcName);
+            st.setString(2, userId);
+            st.executeUpdate();
+        } catch (SQLException e){
+            System.err.println("failed to execute query");
+            e.printStackTrace();
+        }
     }
 }

@@ -48,7 +48,7 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
         return qe.select_area_parameters(area);
     }
 
-    public ServerResponse register(String userId, String nome, String cognome, String cf, String mail, String password, String mc) {
+    public synchronized ServerResponse register(String userId, String nome, String cognome, String cf, String mail, String password, String mc) {
         //check if operator already exists
         if (qe.check_operator_exists(userId)){
             return new ServerResponse(ServerResponse.Type.ERR, "Operator with this userId already exists");
@@ -65,15 +65,15 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
         }
     }
 
-    public ServerResponse login (String userId, String password){
-        if (qe.check_operator_exists(userId)){
+    public synchronized ServerResponse login (String userId, String password){
+        if (qe.check_operator_login(userId, password)){
             Operator op = qe.select_operator_by_id(userId);
             return new ServerResponse(op);
         }
         return new ServerResponse(ServerResponse.Type.ERR, "Incorrect userId or password");
     }
 
-    public ServerResponse createMc(String mcName, String address, ArrayList<Area> areas){
+    public synchronized ServerResponse createMc(Operator op, String mcName, String address, ArrayList<Area> areas){
         if (qe.check_mc_exists(mcName))
             return new ServerResponse(ServerResponse.Type.ERR, "Monitoring center with this name already exists");
 
@@ -81,10 +81,15 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
             for (Area a : areas){
                 qe.insert_area_interesse(a.getId(), mcName);
             }
+            qe.update_operator_mc(op.getUserId(), mcName);
             return new ServerResponse(new MonitoringCenter(mcName, address, areas));
         }
         return new ServerResponse(ServerResponse.Type.ERR, "Failed to create monitoring center");
     }
 
-    public ServerResponse
+    public ServerResponse getMc (String mcName){
+        MonitoringCenter mc = qe.select_mc_by_name(mcName);
+        mc.addAreas(qe.select_aree_interesse_by_mc(mcName));
+        return new ServerResponse(mc);
+    }
 }

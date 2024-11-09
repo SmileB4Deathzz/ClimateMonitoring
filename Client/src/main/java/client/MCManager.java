@@ -1,6 +1,7 @@
 package client;
 
 import java.io.*;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import org.example.*;
 
@@ -107,8 +108,13 @@ public class MCManager {
      * @return The MonitoringCenter with the provided name, or {@code null} if not found.
      */
     public MonitoringCenter getMonitoringCenter(String name){
-        HashMap<String, MonitoringCenter> mcs= getMCenters();
-        return mcs.get(name);
+        ServerResponse sResp = null;
+        try {
+            sResp = ConnectionManager.getCmServer().getMc(name);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        return (MonitoringCenter) sResp.data;
     }
 
 }

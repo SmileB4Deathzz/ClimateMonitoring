@@ -81,7 +81,7 @@ public class CreateCMView {
 
                 ServerResponse sResp = null;
                 try {
-                    sResp = ConnectionManager.getCmServer().createMc(name, address, selectedAreas);
+                    sResp = ConnectionManager.getCmServer().createMc(operator, name, address, selectedAreas);
                 } catch (RemoteException ex) {
                     throw new RuntimeException(ex);
                 }
