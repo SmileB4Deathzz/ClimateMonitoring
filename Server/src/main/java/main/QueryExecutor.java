@@ -5,24 +5,46 @@ import org.example.MonitoringCenter;
 import org.example.Operator;
 import org.example.Parameter;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Properties;
+import java.sql.Date;
+import java.util.*;
 
 public class QueryExecutor {
     private Connection conn = null;
 
     public QueryExecutor(String dbName, String username, String password) {
-        this.conn = connect(dbName, username, password);
+        this.conn = connect();
     }
 
-    public Connection connect(String dbName, String userName, String password) {
-        String url = "jdbc:postgresql://localhost/" + dbName;
+    private static final String CONFIG_FILE_NAME = "dbconfig.cfg"; // Only the file name
+
+    public Connection connect() {
         Properties props = new Properties();
-        props.setProperty("user", userName);
-        props.setProperty("password", password);
+        String dbName;
+
+        // Attempt to load the config file from resources
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
+            if (inputStream != null) {
+                // Load credentials from config file
+                props.load(inputStream);
+                dbName = props.getProperty("dbName");
+            } else {
+                // Config file not found, prompt for credentials
+                props = promptUserForCredentials();
+                dbName = props.getProperty("dbName");
+                savePropertiesToFile(props);  // Save properties for future use
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading configuration file.");
+            throw new RuntimeException(e);
+        }
+
+        // Connect to the database
+        String url = "jdbc:postgresql://localhost/" + dbName;
         try {
             conn = DriverManager.getConnection(url, props);
         } catch (SQLException e) {
@@ -30,6 +52,38 @@ public class QueryExecutor {
             throw new RuntimeException(e);
         }
         return conn;
+    }
+
+    // Prompt the user for database name, username, and password if config file is missing
+    private Properties promptUserForCredentials() {
+        Scanner scanner = new Scanner(System.in);
+        Properties props = new Properties();
+
+        System.out.print("Enter database name: ");
+        props.setProperty("dbName", scanner.nextLine());
+
+        System.out.print("Enter database username: ");
+        props.setProperty("user", scanner.nextLine());
+
+        System.out.print("Enter database password: ");
+        props.setProperty("password", scanner.nextLine());
+
+        return props;
+    }
+
+    // Save properties to the config file for future use
+    private void savePropertiesToFile(Properties props) {
+        // Locate the resources directory to save the config file
+        try {
+            File configFile = new File(getClass().getClassLoader().getResource("").toURI().getPath(), CONFIG_FILE_NAME);
+            try (FileOutputStream fos = new FileOutputStream(configFile)) {
+                props.store(fos, "Database Configuration");
+                System.out.println("Configuration saved to " + configFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to save configuration file.");
+            throw new RuntimeException(e);
+        }
     }
 
     //Select
