@@ -77,7 +77,7 @@ public class QueryExecutor {
                 String notes = rs.getString(3);
                 Date date = rs.getDate(4);
 
-                Parameter p = new Parameter(Parameter.Category.valueOf(category), intensity, notes, date, area);
+                Parameter p = new Parameter(Parameter.Category.valueOf(category), intensity, notes, date, area, null);
                 params.add(p);
             }
             rs.close();
@@ -277,6 +277,24 @@ public class QueryExecutor {
             System.err.println("Failed to insert areas");
             e.printStackTrace();
         }
+    }
+
+    public boolean insert_parameter(Parameter param){
+        boolean inserted = false;
+        try (PreparedStatement st = conn.prepareStatement("INSERT INTO rilevazioni VALUES (?, ?, ?, ?, ?, ?)")){
+            st.setString(1, param.getCategory().toString());
+            st.setInt(2, param.getScore());
+            st.setString(3, param.getNotes().isEmpty() ? null : param.getNotes());
+            st.setDate(4, new java.sql.Date(param.getDate().getTime()));
+            st.setInt(5, param.getArea().getId());
+            st.setString(6, param.getMc().getNome());
+            st.executeUpdate();
+            inserted = true;
+        } catch (SQLException e){
+            System.err.println("Failed to insert Parameter");
+            e.printStackTrace();
+        }
+        return inserted;
     }
 
     public void update_operator_mc(String userId, String mcName){

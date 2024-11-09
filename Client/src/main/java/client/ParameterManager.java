@@ -1,6 +1,7 @@
 package client;
 
 import java.io.*;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import org.example.*;
@@ -69,15 +70,14 @@ public class ParameterManager {
      * @param param The parameter to be added to the database.
      */
     public void addParameter(Parameter param){
+        ServerResponse sResp = null;
         try {
-            ArrayList<Parameter> params = getParameters();
-            params.add(param);
-            saveParameters(params);
+            sResp = ConnectionManager.getCmServer().insertParameter(param);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
-        catch (Exception e){
-            new Dialog(Dialog.type.ERR, "Failed to add new parameter to the database");
-            e.printStackTrace();
-        }
+
+        new Dialog(Dialog.type.valueOf(sResp.type.toString()), sResp.message);
     }
 
     /**
@@ -89,15 +89,16 @@ public class ParameterManager {
     public String[][] getAggregatedParams(ArrayList<Parameter> params){
         Parameter.Category[] categories = Parameter.Category.values();
         ArrayList<String[]> result = new ArrayList<>();
+        ArrayList<Parameter> paramsCopy = new ArrayList<>(params);
         for (Parameter.Category category : categories) {
             int totalScore = 0;
             int count = 0;
-            for (int j = 0; j < params.size(); j++) {
-                Parameter param = params.get(j);
+            for (int j = 0; j < paramsCopy.size(); j++) {
+                Parameter param = paramsCopy.get(j);
                 if (param.getCategory() == category) {
                     count++;
                     totalScore += param.getScore();
-                    params.remove(j);   //No need to check this parameter again for other categories
+                    paramsCopy.remove(j);   //No need to check this parameter again for other categories
                     j--;
                 }
             }

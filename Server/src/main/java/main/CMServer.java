@@ -96,4 +96,10 @@ public class CMServer extends UnicastRemoteObject implements CMServerInterface {
         qe.insert_areas_to_mc(mcName, areas);
         return new ServerResponse(ServerResponse.Type.INFO, "Areas added successfuly");
     }
+
+    public ServerResponse insertParameter(Parameter p){
+        if(qe.insert_parameter(p))
+            return new ServerResponse(ServerResponse.Type.INFO, "Parameter added successfuly");
+        else return new ServerResponse(ServerResponse.Type.ERR, "Failed to insert parameter");
+    }
 }

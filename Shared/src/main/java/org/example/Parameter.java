@@ -57,13 +57,14 @@ public class Parameter implements Serializable {
         this.mc = mc;
     }
 
+    /*
     public Parameter(Category category, int score, String notes, Date date, Area area){
         this.category = category;
         this.score = score;
         this.notes = notes;
         this.date = date;
         this.area = area;
-    }
+    }*/
 
     //Getters
     /**
@@ -109,6 +110,9 @@ public class Parameter implements Serializable {
      */
     public Date getDate() {
         return this.date;
+    }
+    public MonitoringCenter getMc(){
+        return this.mc;
     }
 
     /**

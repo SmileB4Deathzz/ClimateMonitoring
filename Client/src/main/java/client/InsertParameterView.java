@@ -40,7 +40,7 @@ public class InsertParameterView {
         frame.setSize(550, 200);
         frame.setLocationRelativeTo(null);
         frame.setContentPane(paramView);
-        frame.setIconImage(new ImageIcon("Images/icon.png").getImage());
+        frame.setIconImage(new ImageIcon((getClass().getResource("/Images/icon.png"))).getImage());
 
         //date picker
         UtilDateModel model = new UtilDateModel();
@@ -66,7 +66,6 @@ public class InsertParameterView {
             if(date != null){
                 Parameter param = new Parameter(category, score, notes, date, area, mc);
                 new ParameterManager().addParameter(param);
-                new client.Dialog(Dialog.type.INFO, "parameter added");
                 frame.dispose();
             }
         });
